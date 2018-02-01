@@ -6,7 +6,7 @@ pipelines:
         caches:
           - composer
         script:
-          - apt-get update && apt-get install -y unzip zlib1g-dev
+          - apt-get update && apt-get install -y unzip zlib1g-dev git curl libmcrypt-dev mysql-client
           - docker-php-ext-install mcrypt && docker-php-ext-install pdo_mysql && docker-php-ext-install mcrypt
           - docker-php-ext-install zip
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -14,3 +14,15 @@ pipelines:
           - php bin/console doctrine:database:create
           - php bin/console doctrine:migrations:diff && php bin/console doctrine:migrations:migrate
           - ./vendor/bin/simple-phpunit
+        services:
+          - mysql
+          
+definitions:
+  services:
+     mysql:
+       image: mysql
+       environment:
+        MYSQL_DATABASE: 'homestead'
+        MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+        MYSQL_USER: 'homestead'
+        MYSQL_PASSWORD: 'secret'

@@ -11,4 +11,6 @@ pipelines:
           - docker-php-ext-install zip
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
+          - php bin/console doctrine:database:create
+          - php bin/console doctrine:migrations:diff && php bin/console doctrine:migrations:migrate
           - ./vendor/bin/simple-phpunit
